@@ -18,28 +18,28 @@ class App extends Component {
       bpm: 150,
       mixerChannels: [
         {
-          volume: 50,
+          volume: 65,
           sample: 'DrumKits/Kick.wav',
           beats: [0, 6, 12],
           pan: 0,
           mod: [0, 0]
         },
         {
-          volume: 50,
+          volume: 65,
           sample: 'DrumKits/Snare.wav',
           beats: [8],
           pan: 0,
           mod: [0, 0]
         },
         {
-          volume: 50,
+          volume: 65,
           sample: 'DrumKits/Hi Hat.wav',
           beats: [0, 2, 4, 6, 8, 10, 12, 14],
           pan: 0,
           mod: [0, 0]
         },
         {
-          volume: 50,
+          volume: 65,
           sample: 'DrumKits/Open Hat.wav',
           beats: [10],
           pan: 0,
