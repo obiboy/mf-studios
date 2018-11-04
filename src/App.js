@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { MFControls } from './MFControls'
 import { MFMixer } from './MixerRack'
 import { Playlist } from './Playlist'
-import { FileList } from './FileList'
 import { loadAudioFile, playBuffer } from './audio'
 import { channelLength, beatsToSeconds } from './math.js'
 import './App.css'
@@ -186,8 +185,6 @@ class App extends Component {
           updateVolume={this.setVolume.bind(this)}
           toggleBeat={this.toggleBeat.bind(this)}></MFMixer>
         <Playlist playlists={this.state.playlistTracks} patterns={this.state.patterns}></Playlist>
-        <FileList>
-        </FileList>
       </div>
     )
   }
