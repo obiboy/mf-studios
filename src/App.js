@@ -41,9 +41,10 @@ class App extends Component {
     return (
       <div className="App">
         <MFControls
+          time={this.state.time}
+          bpm={this.state.bpm}
           playing={this.state.playing}
           recording={this.state.recording}
-          bpm={this.state.bpm}
           updateBPM={this.state.updateBPM}
           togglePlaying={() => this.state.playing ? this.pause() : this.play()}
           toggleRecording={() => {this.state.recording ? this.stopRecording() : this.startRecording()}}
