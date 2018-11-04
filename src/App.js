@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { MFControls } from './MFControls'
-import { MixerRack } from './MixerRack'
+import { MFMixer } from './MixerRack'
 import { Playlist } from './Playlist'
 import { FileList } from './FileList'
 import './App.css'
@@ -12,8 +12,48 @@ class App extends Component {
       playing: false,
       recording: false, // or something like {start: 20} if it is actually recording
       time: 0,
-      bpm: 110
+      bpm: 110,
+      mixerChannels: [
+        {
+          volume: 50,
+          sample: 'kick.mp3',
+          beats: [],
+          pan: 0,
+          mod: [0, 0]
+        },
+        {
+          volume: 50,
+          sample: 'snare.mp3',
+          beats: [],
+          pan: 0,
+          mod: [0, 0]
+        },
+        {
+          volume: 50,
+          sample: 'hihat.mp3',
+          beats: [],
+          pan: 0,
+          mod: [0, 0]
+        },
+        {
+          volume: 50,
+          sample: 'clap.mp3',
+          beats: [],
+          pan: 0,
+          mod: [0, 0]
+        },
+      ]
     }
+  }
+  toggleBeat(channelID, beatID) {
+    this.setState(state => {
+      if (state.mixerChannels[channelID].beats.includes(beatID)) {
+        state.mixerChannels[channelID].beats = state.mixerChannels[channelID].beats.filter(beat => beat !== beatID)
+      } else {
+        state.mixerChannels[channelID].beats.push(beatID)
+      }
+      return state
+    })
   }
   pause() {
     // TODO
@@ -37,6 +77,13 @@ class App extends Component {
     // TODO
     this.setState({bpm})
   }
+  setVolume(id, volume) {
+    // TODO
+    this.setState(state => {
+      state.mixerChannels[id].volume = volume
+      return state
+    })
+  }
   render() {
     return (
       <div className="App">
@@ -45,15 +92,18 @@ class App extends Component {
           bpm={this.state.bpm}
           playing={this.state.playing}
           recording={this.state.recording}
-          updateBPM={this.state.updateBPM}
+          updateBPM={this.setBPM.bind(this)}
           togglePlaying={() => this.state.playing ? this.pause() : this.play()}
           toggleRecording={() => {this.state.recording ? this.stopRecording() : this.startRecording()}}
           stop={() => {
-            this.pause();
+            this.pause()
             this.setTime(0)
           }}>
         </MFControls>
-        <MixerRack></MixerRack>
+        <MFMixer
+          channels={this.state.mixerChannels}
+          updateVolume={this.setVolume.bind(this)}
+          toggleBeat={this.toggleBeat.bind(this)}></MFMixer>
         <Playlist></Playlist>
         <FileList></FileList>
       </div>
