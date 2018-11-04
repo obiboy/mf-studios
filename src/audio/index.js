@@ -13,13 +13,12 @@ export function playBuffer(buffer, volume = 65, time = 0, ctx = new AudioContext
   src.buffer = buffer
   const gain = ctx.createGain()
   if (volume > 80) {
-    gain.gain.value = volume**1.3
+    gain.gain.value = (volume**1.3 / 100)
   } else if (volume > 70) {
-    gain.gain.value = volume**1.2
+    gain.gain.value = (volume**1.2 / 100)
   } else {
-    gain.gain.value = volume**1.101
+    gain.gain.value = (volume**1.101 / 100)
   }
-  console.log(gain.gain.value)
 
   src.connect(gain)
   gain.connect(ctx.destination)
