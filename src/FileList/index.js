@@ -5,14 +5,14 @@ const readline = require('readline');
 const {google} = require('googleapis');
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/drive'];
 const TOKEN_PATH = 'token.json';
 
 // Load client secrets from a local file.
 fs.readFile('credentials.json', (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
   // Authorize a client with credentials, then call the Google Drive API.
-  authorize(JSON.parse(content), listFiles);
+  authorize(JSON.parse(content), listFiles, listChanges);
 });
 
 /**
@@ -87,48 +87,23 @@ function listFiles(auth) {
       console.log('No files found.');
     }
   });
-
-  var fileId = '1sTWaJ_j7PkjzaBWtNc3IzovK5hQf21FbOw9yLeeLPNQ';
-  var permissions = [
-    {
-      'type': 'user',
-      'role': 'writer',
-      'emailAddress': 'james@jamescostian.com'
-    }
-  ];
-  // Using the NPM module 'async'
-  async.eachSeries(permissions, function (permission, permissionCallback) {
-    drive.permissions.create({
-      resource: permission,
-      fileId: fileId,
-      fields: 'id',
-    }, function (err, res) {
-      if (err) {
-        // Handle error...
-        console.error(err);
-        permissionCallback(err);
-      } else {
-        console.log('Permission ID: ', res.id)
-        permissionCallback();
-      }
-    });
-  }, function (err) {
-    if (err) {
-      // Handle error
-      console.error(err);
-    } else {
-      // All permissions inserted
-    }
-  });
+}
 
 
+function getStartPageToken(auth)
+{
+  const drive = google.drive({version: 'v3, auth'});
   drive.changes.getStartPageToken({}, function (err, res) {
     console.log('Start token:', res.startPageToken);
+    return res.startPageToken;
   });
+}
 
-var pageToken;
+function listChanges(auth){
+var pageToken = getStartPageToken();
 // Using the npm module 'async'
 async.doWhilst(function (callback) {
+  const drive = google.drive({version: 'v3, auth'});
   drive.changes.list({
     pageToken: pageToken,
     fields: '*'
