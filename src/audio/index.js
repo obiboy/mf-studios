@@ -9,12 +9,15 @@ export function loadAudioFile(url, ctx = new AudioContext()) {
 }
 
 export function playBuffer(buffer, volume = 100, time = 0, ctx = new AudioContext()) {
-  const gain = ctx.createGain()
   const src = ctx.createBufferSource()
   src.buffer = buffer
+  const gain = ctx.createGain()
+  gain.gain.value = volume
 
   src.connect(gain)
   gain.connect(ctx.destination)
 
   src.start(time)
+
+  return src
 }

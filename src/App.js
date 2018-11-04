@@ -47,6 +47,7 @@ class App extends Component {
         },
       ]
     }
+    this.ctx = new AudioContext()
     this.state.mixerChannels.forEach((channel, id) => {
       loadAudioFile(channel.sample).then(buffer => {
         this.setState(state => {
@@ -66,29 +67,44 @@ class App extends Component {
       return state
     })
   }
+  stop() {
+    this.ctx.close()
+    this.setTime(0)
+    this.setState(state => ({playing: false}))
+  }
   pause() {
-    // TODO
+    this.ctx.suspend()
     this.setState(state => ({playing: false}))
   }
   play() {
     // TODO
     this.setState(state => ({playing: true}))
-    const ctx = new AudioContext()
+    const resuming = this.ctx.state === 'suspended'
+    if (resuming) {
+      this.ctx.resume()
+    } else {
+      this.ctx = new AudioContext()
+    }
     this.state.mixerChannels.forEach(channel => {
       const setupBeats = (beatOffset) => {
         channel.beats.forEach(beat => {
-          playBuffer(channel.buffer, channel.volume, beatsToSeconds(beat + beatOffset, this.state.bpm), ctx)
+          channel.src = playBuffer(channel.buffer, channel.volume, beatsToSeconds(beat + beatOffset, this.state.bpm), this.ctx)
         })
       }
-      setupBeats(0)
+      if (!resuming) {
+        setupBeats(0)
+      }
       let timesLooped = 0
       const numBeats = channelLength(channel.beats)
       setInterval(() => {
         timesLooped++
-        setupBeats(numBeats * timesLooped)
+        if (this.ctx.state === 'running') {
+          setupBeats(numBeats * timesLooped)
+        }
       }, 1000 * beatsToSeconds(numBeats, this.state.bpm))
     })
-  }  stopRecording() {
+  }
+  stopRecording() {
     // TODO
     this.setState(state => ({recording: false}))
   }
@@ -101,7 +117,9 @@ class App extends Component {
   }
   setBPM(bpm) {
     // TODO
+    this.pause()
     this.setState({bpm})
+    this.play()
   }
   setVolume(id, volume) {
     // TODO
@@ -121,10 +139,7 @@ class App extends Component {
           updateBPM={this.setBPM.bind(this)}
           togglePlaying={() => this.state.playing ? this.pause() : this.play()}
           toggleRecording={() => {this.state.recording ? this.stopRecording() : this.startRecording()}}
-          stop={() => {
-            this.pause()
-            this.setTime(0)
-          }}>
+          stop={this.stop.bind(this)}>
         </MFControls>
         <MFMixer
           channels={this.state.mixerChannels}
