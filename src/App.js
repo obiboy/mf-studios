@@ -119,16 +119,24 @@ class App extends Component {
   }
   addPatternToTrack(trackID, position) {
     this.setState(state => {
-      if (state.playlistTracks.length - 1 === position) {
+      if (state.playlistTracks[trackID].sequence.length - 1 === position) {
         // This is an insert at the very last position - make sure to add a new position!
-        state.playlistTracks.forEach(track => track.sequence.push(null))
+        for (let i = 0 ; i < state.playlistTracks.length; i++) {
+          state.playlistTracks[i].sequence.push(null)
+        }
       }
       state.playlistTracks[trackID].sequence[position] = JSON.parse(JSON.stringify(state.mixerChannels))
       state = JSON.parse(JSON.stringify(state))
       this.sendState(state)
     })
   }
-  render() {
+  removePatternFromTrack(trackID, position) {
+    this.setState(state => {
+      state.playlistTracks[trackID].sequence[position] = null
+      state = JSON.parse(JSON.stringify(state))
+      this.sendState(state)
+    })
+  }  render() {
     return (
       <div className="App">
         <MFControls
@@ -147,7 +155,8 @@ class App extends Component {
         <Playlist
           playlists={this.state.playlistTracks}
           time={this.ctx.currentTime}
-          addPatternToTrack={this.addPatternToTrack.bind(this)}></Playlist>
+          addPatternToTrack={this.addPatternToTrack.bind(this)}
+          removePatternFromTrack={this.removePatternFromTrack.bind(this)}></Playlist>
       </div>
     )
   }

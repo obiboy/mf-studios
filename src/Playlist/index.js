@@ -3,14 +3,6 @@ import React from 'react'
 export function Playlist (props) {
   return (
     <div style={{width: '80vw', margin: '2vh auto'}}>
-      <div style={{
-        borderLeft: '3px solid blue',
-        position: 'absolute',
-        top: '41vh',
-        left: 'calc(15.1vw)',
-        fontSize: '100vh'
-      }}>&nbsp;</div>
-
       {
         props.playlists.map((playlist, id) => (
           <div>
@@ -46,15 +38,19 @@ export function Playlist (props) {
                       justifyContent: 'center',
                       alignItems: 'center'
                     }}>
-                      <a href="#" onClick={() => props.addPatternToTrack(id, pos)}>+</a>
+                      <a style={{color: 'green'}} href="#" onClick={() => props.addPatternToTrack(id, pos)}>+</a>
                     </div>
                   )
                 } else {
                   return (<div style={{
                     width: '10%',
                     height: '95%',
-                    border: '2px solid black'
-                  }}>1</div>)
+                    border: '2px solid black',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <a style={{color: 'red'}} href="#" onClick={() => props.removePatternFromTrack(id, pos)}>&times;</a></div>)
                 }
               })}
             </div>
