@@ -38,44 +38,44 @@ export function Playlist (props) {
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>1</div>
+            }}></div>
             <div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>2</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>3</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>4</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>5</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>6</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>7</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>8</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>9</div><div class="grid-item" style={{
+            }}></div><div class="grid-item" style={{
               width: '10%',
               height: '95%',
               border: '2px solid black'
-            }}>10</div>
+            }}></div>
             </div>
             <div style={{clear: 'both'}}></div>
           </div>

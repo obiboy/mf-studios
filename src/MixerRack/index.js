@@ -30,7 +30,9 @@ export function MFMixer(props) {
                     type="checkbox"
                     style={{
                       margin: i % 4 === 0 ? '0 0 0 5px' : '0',
-                      opacity: ((i + 1) / 16) > lastGroup ? '.5' : '1'
+                      opacity: ((i + 1) / 16) > lastGroup ? '.5' : '1',
+                      width: '1vw',
+                      height: '1vw'
                     }}
                     checked={channel.beats.includes(i)}
                     onChange={() => props.toggleBeat(id, i)} />

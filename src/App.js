@@ -9,57 +9,92 @@ import './App.css'
 class App extends Component {
   constructor(props) {
     super(props)
-    this.connection = new WebSocket('ws://localhost:7862')
-    this.connection.onerror = window.location.reload.bind(window.location)
-    this.connection.onmessage = e => {
-      setTimeout(() => {
-        this.setState(JSON.parse(e.data))
-        this.reloadAudioFiles()
-      }, 0)
-    }
     this.context = new AudioContext()
     this.state = {
       playing: false,
       recording: false, // or something like {start: 20} if it is actually recording
       time: 0,
-      bpm: 0,
-      mixerChannels: [],
-      patterns: [],
-      playlistTracks: []
+      bpm: 150,
+      mixerChannels: [
+        {
+          volume: 65,
+          sample: 'DrumKits/Kick.wav',
+          beats: [0, 6, 12],
+          pan: 0,
+          mod: [0, 0]
+        },
+        {
+          volume: 65,
+          sample: 'DrumKits/Snare.wav',
+          beats: [8],
+          pan: 0,
+          mod: [0, 0]
+        },
+        {
+          volume: 65,
+          sample: 'DrumKits/Hi Hat.wav',
+          beats: [0, 2, 4, 6, 8, 10, 12, 14],
+          pan: 0,
+          mod: [0, 0]
+        },
+        {
+          volume: 65,
+          sample: 'DrumKits/Open Hat.wav',
+          beats: [10],
+          pan: 0,
+          mod: [0, 0]
+        }
+      ],
+      patterns: [
+        [
+          {
+            volume: 65,
+            sample: 'DrumKits/Kick.wav',
+            beats: [0, 6, 12],
+            pan: 0,
+            mod: [0, 0]
+          },
+          {
+            volume: 65,
+            sample: 'DrumKits/Snare.wav',
+            beats: [8],
+            pan: 0,
+            mod: [0, 0]
+          },
+          {
+            volume: 65,
+            sample: 'DrumKits/Hi Hat.wav',
+            beats: [0, 2, 4, 6, 8, 10, 12, 14],
+            pan: 0,
+            mod: [0, 0]
+          },
+          {
+            volume: 65,
+            sample: 'DrumKits/Open Hat.wav',
+            beats: [10],
+            pan: 0,
+            mod: [0, 0]
+          }
+        ]
+      ],
+      playlistTracks: [
+        {
+          sequence: [0, 0]
+        },
+        {
+          sequence: [null, null, 0]
+        }
+      ]
     }
     this.ctx = new AudioContext()
-    this.reloadAudioFiles()
-  }
-  reloadAudioFiles() {
     this.state.mixerChannels.forEach((channel, id) => {
-      if (!channel.buffer) {
-        loadAudioFile(channel.sample).then(buffer => {
-          this.setState(state => {
-            state.mixerChannels[id].buffer = buffer
-            return state
-          })
+      loadAudioFile(channel.sample).then(buffer => {
+        this.setState(state => {
+          state.mixerChannels[id].buffer = buffer
+          return state
         })
-      }
-    })
-  }
-  sendState(state = false) {
-    if (!state) {
-      state = this.state
-    }
-    this.connection.send(
-      JSON.stringify({
-        bpm: state.bpm,
-        mixerChannels: state.mixerChannels.map(channel => ({
-          volume: channel.volume,
-          sample: channel.sample,
-          beats: channel.beats,
-          pan: channel.pan,
-          mod: channel.mod
-        })),
-        patterns: state.patterns,
-        playlistTracks: state.playlistTracks,
       })
-    )
+    })
   }
   toggleBeat(channelID, beatID) {
     this.setState(state => {
@@ -68,7 +103,6 @@ class App extends Component {
       } else {
         state.mixerChannels[channelID].beats.push(beatID)
       }
-      this.sendState(state)
       return state
     })
   }
@@ -125,13 +159,11 @@ class App extends Component {
     this.pause()
     this.setState({bpm})
     this.play()
-    this.sendState()
   }
   setVolume(id, volume) {
     // TODO
     this.setState(state => {
       state.mixerChannels[id].volume = volume
-      this.sendState(state)
       return state
     })
   }
@@ -144,7 +176,7 @@ class App extends Component {
           playing={this.state.playing}
           recording={this.state.recording}
           updateBPM={this.setBPM.bind(this)}
-          togglePlaying={() => this.state.playing ? this.s() : this.play()}
+          togglePlaying={() => this.state.playing ? this.stop() : this.play()}
           toggleRecording={() => {this.state.recording ? this.stopRecording() : this.startRecording()}}
           stop={this.stop.bind(this)}>
         </MFControls>

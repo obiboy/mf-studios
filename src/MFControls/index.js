@@ -34,10 +34,12 @@ export function MFControls (props) {
     }}>
       <img src={micIcon} />
     </a>
-    <input onChange={e => props.updateBPM(e.target.value)} value={props.bpm} size="4" style={{
+    <input onChange={e => props.updateBPM(e.target.value)} value={props.bpm} style={{
       verticalAlign: 'middle',
+      textAlign: 'center',
       border: '1px solid grey',
-      padding: '1vh'
+      width: '2vw',
+      height: '2vw'
     }} />
   </div>)
 }
