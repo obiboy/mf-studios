@@ -44,7 +44,47 @@ class App extends Component {
           beats: [10],
           pan: 0,
           mod: [0, 0]
+        }
+      ],
+      patterns: [
+        [
+          {
+            volume: 65,
+            sample: 'DrumKits/Kick.wav',
+            beats: [0, 6, 12],
+            pan: 0,
+            mod: [0, 0]
+          },
+          {
+            volume: 65,
+            sample: 'DrumKits/Snare.wav',
+            beats: [8],
+            pan: 0,
+            mod: [0, 0]
+          },
+          {
+            volume: 65,
+            sample: 'DrumKits/Hi Hat.wav',
+            beats: [0, 2, 4, 6, 8, 10, 12, 14],
+            pan: 0,
+            mod: [0, 0]
+          },
+          {
+            volume: 65,
+            sample: 'DrumKits/Open Hat.wav',
+            beats: [10],
+            pan: 0,
+            mod: [0, 0]
+          }
+        ]
+      ],
+      playlistTracks: [
+        {
+          sequence: [0, 0]
         },
+        {
+          sequence: [null, null, 0]
+        }
       ]
     }
     this.ctx = new AudioContext()
@@ -145,7 +185,7 @@ class App extends Component {
           channels={this.state.mixerChannels}
           updateVolume={this.setVolume.bind(this)}
           toggleBeat={this.toggleBeat.bind(this)}></MFMixer>
-        <Playlist></Playlist>
+        <Playlist playlists={this.state.playlistTracks} patterns={this.state.patterns}></Playlist>
         <FileList>
         </FileList>
       </div>

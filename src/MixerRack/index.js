@@ -5,12 +5,12 @@ const numBeats = 32
 
 export function MFMixer(props) {
   return (
-    <div>
+    <div style={{padding: '2vh 0', borderBottom: '1px solid black'}}>
       {
         props.channels.map((channel, id) => {
           const lastGroup = channelLength(channel.beats) / 16
           return (<div>
-            <input type="range" min="0" max="100" value={channel.volume} onInput={e => props.updateVolume(id, +e.target.value)} />
+            <input type="range" min="0" max="100" value={channel.volume} onInput={e => props.updateVolume(id, +e.target.value)} onChange={() => {}} />
             <span style={{
               border: '1px solid gray',
               padding: '2px 0',
@@ -18,7 +18,8 @@ export function MFMixer(props) {
               display: 'inline-block',
               textOverflow: 'ellipsis',
               overflow: 'hidden',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              userSelect: 'none'
             }}>
               {channel.sample}
             </span>
