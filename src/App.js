@@ -14,28 +14,27 @@ class App extends Component {
     this.connection.onmessage = e => {
       setTimeout(() => {
         this.setState(JSON.parse(e.data))
-        this.reloadAudioFiles()
+        setTimeout(this.reloadAudioFiles.bind(this), 0)
       }, 0)
     }
     this.context = new AudioContext()
     this.state = {
       playing: false,
       recording: false, // or something like {start: 20} if it is actually recording
-      time: 0,
+      audioBuffers: {},
       bpm: 0,
       mixerChannels: [],
-      patterns: [],
       playlistTracks: []
     }
     this.ctx = new AudioContext()
     this.reloadAudioFiles()
   }
   reloadAudioFiles() {
-    this.state.mixerChannels.forEach((channel, id) => {
-      if (!channel.buffer) {
+    this.state.mixerChannels.forEach(channel => {
+      if (!this.state.audioBuffers[channel.sample]) {
         loadAudioFile(channel.sample).then(buffer => {
           this.setState(state => {
-            state.mixerChannels[id].buffer = buffer
+            state.audioBuffers[channel.sample] = buffer
             return state
           })
         })
@@ -46,20 +45,7 @@ class App extends Component {
     if (!state) {
       state = this.state
     }
-    this.connection.send(
-      JSON.stringify({
-        bpm: state.bpm,
-        mixerChannels: state.mixerChannels.map(channel => ({
-          volume: channel.volume,
-          sample: channel.sample,
-          beats: channel.beats,
-          pan: channel.pan,
-          mod: channel.mod
-        })),
-        patterns: state.patterns,
-        playlistTracks: state.playlistTracks,
-      })
-    )
+    this.connection.send(JSON.stringify(state))
   }
   toggleBeat(channelID, beatID) {
     this.setState(state => {
@@ -74,7 +60,6 @@ class App extends Component {
   }
   stop() {
     this.ctx.close()
-    this.setTime(0)
     this.setState(state => ({playing: false}))
   }
   pause() {
@@ -93,7 +78,7 @@ class App extends Component {
     this.state.mixerChannels.forEach(channel => {
       const setupBeats = (beatOffset) => {
         channel.beats.forEach(beat => {
-          channel.src = playBuffer(channel.buffer, channel.volume, beatsToSeconds(beat + beatOffset, this.state.bpm), this.ctx)
+          channel.src = playBuffer(this.state.audioBuffers[channel.sample], channel.volume, beatsToSeconds(beat + beatOffset, this.state.bpm), this.ctx)
         })
       }
       if (!resuming) {
@@ -117,9 +102,6 @@ class App extends Component {
     // TODO
     this.setState(state => ({recording: {start: state.time}}))
   }
-  setTime(time) {
-    this.setState({time})
-  }
   setBPM(bpm) {
     // TODO
     this.pause()
@@ -135,11 +117,21 @@ class App extends Component {
       return state
     })
   }
+  addPatternToTrack(trackID, position) {
+    this.setState(state => {
+      if (state.playlistTracks.length - 1 === position) {
+        // This is an insert at the very last position - make sure to add a new position!
+        state.playlistTracks.forEach(track => track.sequence.push(null))
+      }
+      state.playlistTracks[trackID].sequence[position] = JSON.parse(JSON.stringify(state.mixerChannels))
+      state = JSON.parse(JSON.stringify(state))
+      this.sendState(state)
+    })
+  }
   render() {
     return (
       <div className="App">
         <MFControls
-          time={this.state.time}
           bpm={this.state.bpm}
           playing={this.state.playing}
           recording={this.state.recording}
@@ -152,7 +144,10 @@ class App extends Component {
           channels={this.state.mixerChannels}
           updateVolume={this.setVolume.bind(this)}
           toggleBeat={this.toggleBeat.bind(this)}></MFMixer>
-        <Playlist playlists={this.state.playlistTracks} patterns={this.state.patterns}></Playlist>
+        <Playlist
+          playlists={this.state.playlistTracks}
+          time={this.ctx.currentTime}
+          addPatternToTrack={this.addPatternToTrack.bind(this)}></Playlist>
       </div>
     )
   }
