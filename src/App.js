@@ -83,10 +83,10 @@ class App extends Component {
       setupBeats(0)
       let timesLooped = 0
       const numBeats = channelLength(channel.beats)
-      // setInterval(() => {
-      //   timesLooped++
-      //   setupBeats(numBeats * timesLooped)
-      // }, beatsToSeconds(numBeats - 3, this.state.bpm))
+      setInterval(() => {
+        timesLooped++
+        setupBeats(numBeats * timesLooped)
+      }, 1000 * beatsToSeconds(numBeats, this.state.bpm))
     })
   }  stopRecording() {
     // TODO

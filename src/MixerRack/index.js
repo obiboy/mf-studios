@@ -8,7 +8,7 @@ export function MFMixer(props) {
     <div>
       {
         props.channels.map((channel, id) => {
-          const lastGroup = channelLength(channel.beats)
+          const lastGroup = channelLength(channel.beats) / 16
           return (<div>
             <input type="range" min="0" max="100" value={channel.volume} onChange={e => props.updateVolume(id, +e.target.value)} />
             <span style={{
