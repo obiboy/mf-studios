@@ -46,44 +46,12 @@ let payload = {
       mod: [0, 0]
     }
   ],
-  patterns: [
-    [
-      {
-        volume: 65,
-        sample: 'DrumKits/Kick.wav',
-        beats: [0, 6, 12],
-        pan: 0,
-        mod: [0, 0]
-      },
-      {
-        volume: 65,
-        sample: 'DrumKits/Snare.wav',
-        beats: [8],
-        pan: 0,
-        mod: [0, 0]
-      },
-      {
-        volume: 65,
-        sample: 'DrumKits/Hi Hat.wav',
-        beats: [0, 2, 4, 6, 8, 10, 12, 14],
-        pan: 0,
-        mod: [0, 0]
-      },
-      {
-        volume: 65,
-        sample: 'DrumKits/Open Hat.wav',
-        beats: [10],
-        pan: 0,
-        mod: [0, 0]
-      }
-    ]
-  ],
   playlistTracks: [
     {
-      sequence: [0, 0]
+      sequence: [null, null, null, null, null, null, null, null, null, null]
     },
     {
-      sequence: [null, null, 0]
+      sequence: [null, null, null, null, null, null, null, null, null, null]
     }
   ]
 }
@@ -92,7 +60,7 @@ wss.on('connection', ws => {
   ws.on('message', msg => {
     payload = JSON.parse(msg)
     wss.clients.forEach(client => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(payload))
       }
     })
