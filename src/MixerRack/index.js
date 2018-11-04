@@ -1,4 +1,5 @@
 import React from 'react'
+import { channelLength } from '../math.js'
 
 const numBeats = 32
 
@@ -7,16 +8,13 @@ export function MFMixer(props) {
     <div>
       {
         props.channels.map((channel, id) => {
-          const lastChecked = channel.beats.reduce(function (p, v) {
-            return ( p > v ? p : v )
-          }, 0)
-          const lastGroup = Math.ceil((lastChecked + 1) / 16)
+          const lastGroup = channelLength(channel.beats)
           return (<div>
             <input type="range" min="0" max="100" value={channel.volume} onChange={e => props.updateVolume(id, +e.target.value)} />
             <span style={{
               border: '1px solid gray',
               padding: '2px 0',
-              width: '10vw',
+              width: '12vw',
               display: 'inline-block',
               textOverflow: 'ellipsis',
               overflow: 'hidden',
