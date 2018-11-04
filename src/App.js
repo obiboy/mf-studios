@@ -176,7 +176,7 @@ class App extends Component {
           playing={this.state.playing}
           recording={this.state.recording}
           updateBPM={this.setBPM.bind(this)}
-          togglePlaying={() => this.state.playing ? this.pause() : this.play()}
+          togglePlaying={() => this.state.playing ? this.s() : this.play()}
           toggleRecording={() => {this.state.recording ? this.stopRecording() : this.startRecording()}}
           stop={this.stop.bind(this)}>
         </MFControls>

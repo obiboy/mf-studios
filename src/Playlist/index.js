@@ -2,22 +2,22 @@ import React from 'react'
 
 export function Playlist (props) {
   return (
-    <div style={{width: '80vw', margin: '2vh auto'}}>
+    <div style={{width: '100vh', margin: '2vh auto'}}>
       {
         props.playlists.map((playlist, id) => (
           <div>
             <div style={{
               borderLeft: '3px solid blue',
               position: 'absolute',
-              top: '22.5vw',
-              left: 'calc(14.4vw)',
+              top: '23.5vh',
+              left: 'calc(55.5vh)',
               fontSize: '100vh',
             }}>&nbsp;
             </div>
             <div style={{
               float: 'left',
-              width: '5vw',
-              height: '5vw',
+              width: '9vh',
+              height: '7vh',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -26,8 +26,8 @@ export function Playlist (props) {
             </div>
             <div style={{
               float: 'left',
-              width: '72vw',
-              height: '5vw',
+              width: '90vh',
+              height: '7vh',
               background: 'red',
               border: '1px solid black',
               display: 'flex',
