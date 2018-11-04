@@ -2,14 +2,14 @@ import React from 'react'
 
 export function Playlist (props) {
   return (
-    <div style={{width: '80vw', margin: '2vh auto'}}>
+    <div style={{width: '100vh', margin: '2vh auto'}}>
       {
         props.playlists.map((playlist, id) => (
           <div>
             <div style={{
               float: 'left',
-              width: '5vw',
-              height: '5vw',
+              width: '9vh',
+              height: '7vh',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
